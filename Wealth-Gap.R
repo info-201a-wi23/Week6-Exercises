@@ -4,11 +4,13 @@ home_owner <- read.csv('https://raw.githubusercontent.com/rfordatascience/tidytu
 
 race_wealth <- read.csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-02-09/race_wealth.csv')
 
-library(ggplot2)
+# Load relevant libraries
+Your code here
 
 # How is average family wealth in the U.S. trending over time?
 
-# To answer this question, we first need to filter the data for "Average" (not "Median") family wealth. Then we need to make a new dataframe from race_wealth with the average family wealth per year for all races
+# To answer this question, we first need to filter the data for "Average" (not "Median") family wealth
+# Then we need to make a new dataframe from race_wealth with the average family wealth per year for all races
 # Save this as `total_avg_wealth`
 
 Your code here
