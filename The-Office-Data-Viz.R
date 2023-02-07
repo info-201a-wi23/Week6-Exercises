@@ -9,6 +9,8 @@ library("ggplot2")
 # This data is drawn from Kaggle: https://www.kaggle.com/datasets/kapastor/the-office-imdb-ratings-per-episode
 
 office_df <-
+# convert column to date format
+office_df$AirDate<- as.Date(office_df$AirDate)
 
 # What is the episode(s) with the highest IMDB rating in the dataset?
 # Filter the data and save the row(s) as highest_rating_rows
