@@ -1,50 +1,39 @@
 #### Making Data Visualizations with The Office
 
-# Install schrute package and ggplot2
-install.packages("schrute")
-install.packages("ggplot2")
-
-# Load schrute package, dplyr, and ggplot2
-library("schrute")
+# Load dplyr and ggplot2
 library("dplyr")
 library("ggplot2")
 
-# Load The Office data
-office_df <- theoffice
+# Load The Office data from this URL:
+# https://raw.githubusercontent.com/melaniewalsh/Neat-Datasets/main/TheOfficeIMDBPerEpisode.csv
+# This data is drawn from Kaggle: https://www.kaggle.com/datasets/kapastor/the-office-imdb-ratings-per-episode
 
-# What is the episode with the highest IMDB rating in the dataset?
+office_df <- read.csv("https://raw.githubusercontent.com/melaniewalsh/Neat-Datasets/main/TheOfficeIMDBPerEpisode.csv", stringsAsFactors = FALSE)
+# convert column to date format
+office_df$AirDate<- as.Date(office_df$AirDate)
+
+# What is the episode(s) with the highest IMDB rating in the dataset?
 # Filter the data and save the row(s) as highest_rating_rows
 highest_rating_rows <- office_df %>% 
-  filter(imdb_rating == max(imdb_rating, na.rm = TRUE))
+  filter(Rating == max(Rating, na.rm = TRUE))
+
+# What is the episode(s) with the lowest IMDB rating in the dataset?
+# Filter the data and save the row(s) as lowest_rating_rows
+lowest_rating_rows <- office_df %>% 
+  filter(Rating == min(Rating, na.rm = TRUE))
 
 # Which season of The Office was the best?
-# Calculate the average IMDB rating for each season
+# Calculate the average IMDB rating for *each season*
+# Save as rating_per_season
 rating_per_season <- office_df %>%
-  group_by(season) %>%
-  summarize(avg_rating = mean(imdb_rating, na.rm = TRUE))
+  group_by(Season) %>%
+  summarize(avg_rating = mean(Rating, na.rm = TRUE))
 
-# Now plot the average IMDB rating for each season as a scatterplot, a line plot, and a bar plot
-# Which do you think is the best representation of this data?
-ggplot(data = rating_per_season) +
-  geom_col(aes(x=season, y = avg_rating))
-  
-# If you want to make the x axis of the plot above have whole numbers, you can install and load the "scales" package and add the line of code below
-#install.packages("scales")
-#library("scales")
-# + scale_x_continuous(breaks = pretty_breaks())
+# Plot the IMDB rating for every episode of The Office as a line plot
+# with date on the X axis and IMDB rating on the Y axis
+ggplot(office_df) +
+  geom_line(aes(x = AirDate, y = Rating))
 
-# Which character speaks the most?
-# Calculate the total number of lines spoken by each character for the entire series
-total_lines_per_character <- office_df %>%
-  # Group by character 
-  group_by(character) %>%
-  # Calculate number of rows (aka lines spoken) in each group with n()
-  summarize(total_lines = n()) %>%
-  # Slice for top 10 values by total_lines
-  slice_max(n = 10, order_by = total_lines)
-
-# Make a bar plot of this data
-ggplot(data = total_lines_per_character) +
-  geom_col(
-    aes(x = reorder(character, desc(total_lines)), y = total_lines, fill = character)
-  )
+# Now plot the *average* IMDB rating for *each season* as a scatterplot, a line plot, and both
+ggplot(rating_per_season) +
+  geom_line(aes(x = Season, y = avg_rating))
